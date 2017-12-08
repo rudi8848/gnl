@@ -295,7 +295,7 @@ int		get_next_line(const int fd, char **line)
 
 		//printf("bytes read: %d, buffer after reading:%s\n",n, buff);
 		push_file(&node, fd, new_buff);//добавляем новый узел, кладем туда фд и буфер		
-		// free(new_buff);
+		 //free(new_buff);
 		// new_buff = NULL;	
 	}
 		//подвигаемся к узлу с нужным фд

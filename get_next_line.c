@@ -93,7 +93,6 @@ int			get_next_line(const int fd, char **line)
 				new_buff = ft_strncpy(new_buff, buff, BUFF_SIZE);
 			else
 				new_buff = ft_strjoin(new_buff, buff);
-			free(buff);
 		}
 		printf("new_buff: %s\n", new_buff);
 		push_file(&node, fd, new_buff);
