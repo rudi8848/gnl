@@ -53,7 +53,7 @@ char		*ft_getline(char *s)
 		if (j)
 			s = ft_strsub(s, j, i - j);
 		else
-			s = ft_strsub(s, 0, i + 1);
+			s = ft_strsub(s, 0, i );
 		return (s);
 	}
 	return (NULL);
@@ -102,8 +102,16 @@ int			get_next_line(const int fd, char **line)
 	tmp = fd_search(node, fd);
 	printf("content before: %s\n\n", tmp->content);
 	*line = ft_getline(tmp->content);
+
 	tmp->content += n_in_begin(tmp->content);
 	tmp->content = (ft_strchr(tmp->content, '\n'));
 	printf("content after: %s\n\n", tmp->content);
-	return (0);
+	if (tmp->content == NULL)
+		return (0);
+	if (line && tmp->content)
+	{
+		printf("<<<LINE: %s>>>\n", *line);
+		return (1);
+	}
+	return 0;
 }
