@@ -100,12 +100,12 @@ int			get_next_line(const int fd, char **line)
 		// new_buff = NULL;
 	}
 	tmp = fd_search(node, fd);
-	printf("content before: %s\n\n", tmp->content);
+	//printf("content before: %s\n\n", tmp->content);
 	*line = ft_getline(tmp->content);
 
 	tmp->content += n_in_begin(tmp->content);
 	tmp->content = (ft_strchr(tmp->content, '\n'));
-	printf("content after: %s\n\n", tmp->content);
+	//printf("content after: %s\n\n", tmp->content);
 	if (tmp->content == NULL)
 		return (0);
 	if (line && tmp->content)
