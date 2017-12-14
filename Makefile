@@ -9,7 +9,7 @@ $(LIBFT):
 	@make -C libft
 
 $(NAME): $(LIBFT) $(OBJ)
-	gcc -Wall -Wextra -Werror $(OBJ) $(LIBFT) $(SRC) -o $(NAME) 
+	gcc -Wall -Wextra -Werror -L. $(OBJ) $(LIBFT) $(SRC) -o $(NAME) 
 
 clean:
 	rm -f $(OBJ)

@@ -55,6 +55,24 @@ void printValues(t_list *head, int last)
 	return (i);
 }
 
+void	ft_strdel(char **as)
+{
+	if (as != NULL)
+	{
+		free(*as);
+		*as = NULL;
+	}
+}
+
+void	ft_memdel(void **ap)
+{
+	if (ap != NULL)
+	{
+		free(*ap);
+		*ap = NULL;
+	}
+}
+
 
 	char	*ft_strchr(const char *str, int c)
 {
@@ -160,7 +178,7 @@ char	*ft_strsub(char const *s, unsigned int start, size_t len)
 	return (NULL);
 }
 
-char			*ft_strjoin(char const *s1, char const *s2)
+char			*ft_strjoin_free(char *s1, char *s2)
 {
 	char		*dest;
 	size_t		len;
@@ -185,7 +203,8 @@ char			*ft_strjoin(char const *s1, char const *s2)
 			while (s2[j])
 				dest[i++] = s2[j++];
 			dest[i++] = '\0';
-			return (dest);
+			free(s1);
+				return (dest);
 		}
 	}
 	return (NULL);
@@ -271,7 +290,7 @@ int		get_next_line(const int fd, char **line)
 	n = 0;
 	new_buff = NULL;
 
-	if (fd < 0 || !line)
+	if (fd < 0 || !line || (read(fd, 0, 0) < 0))
 		return (-1);
 	printf("fd is: %d\n", fd);
 
@@ -288,8 +307,9 @@ int		get_next_line(const int fd, char **line)
 			if(new_buff[0] == '\0')
 				new_buff = ft_strncpy(new_buff, buff, BUFF_SIZE);
 			else
-				new_buff = ft_strjoin(new_buff, buff);
-			//printf("new_buff: %s\n", new_buff);			
+				new_buff = ft_strjoin_free(new_buff, buff);
+			printf("new_buff: %p\n", new_buff);
+			printf("buff: %p\n", buff);
 			//new_buff = ft_strrealloc(new_buff, ft_strlen(new_buff) + BUFF_SIZE);
 			
 		}
@@ -342,6 +362,7 @@ int		main(void)
 	close(fd1);
 	close(fd2);
 	close(fd3);
+	system("leaks gnl");
 
 	return 0;
 }
