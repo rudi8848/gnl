@@ -262,10 +262,7 @@ char *ft_getline(char *s)
 		}
 		while(s[i] && s[i] != '\n')
 			i++;
-		if (j)
-			s = ft_strsub(s, j, i - j-1);
-		else
-			s = ft_strsub(s, 0, i );
+		s = ft_strsub(s, j, i - j-1);
 		return (s);
 	}
 	return (NULL);

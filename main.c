@@ -22,5 +22,6 @@ int		main(void)
 	close(fd1);
 	close(fd2);
 	close(fd3);
+	system("leaks get_next_line");
 	return 0;
 }

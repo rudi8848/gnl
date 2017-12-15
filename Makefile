@@ -5,6 +5,9 @@ LIBFT = libft/libft.a
 
 all: $(NAME)
 
+$(OBJ): %.o: %.c
+	gcc -c -Wall -Wextra -Werror $< -o$@
+
 $(LIBFT):
 	@make -C libft
 

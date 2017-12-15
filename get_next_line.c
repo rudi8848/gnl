@@ -36,7 +36,6 @@ char			*ft_strjoin_free(char *s1, char *s2)
 	{
 		len = ft_strlen(s1) + ft_strlen(s2);
 		dest = (char*)malloc(sizeof(char) * (len + 1));
-
 		if (dest)
 		{
 			ft_bzero(dest, len+1);
@@ -82,10 +81,7 @@ char		*ft_getline(char *s)
 		}
 		while (s[i] && s[i] != '\n')
 			i++;
-		if (j)
-			s = ft_strsub(s, j, i - j);
-		else
-			s = ft_strsub(s, 0, i );
+		s = ft_strsub(s, j, i - j);
 		return (s);
 	}
 	return (NULL);
@@ -105,12 +101,10 @@ int			get_next_line(const int fd, char **line)
 {
 	char				buff[BUFF_SIZE + 1];
 	char				*new_buff;
-	int					n;
 	static t_list		*node;
 	t_list				*tmp;
 
 	tmp = NULL;
-	n = 0;
 	if (fd < 0 || !line || (read(fd, 0, 0) < 0))
 		return (-1);
 	if (!fd_search(node, fd))
@@ -118,7 +112,7 @@ int			get_next_line(const int fd, char **line)
 		new_buff = ft_strnew(BUFF_SIZE);
 		if (!new_buff)
 			return (-1);
-		while ((n = (read(fd, buff, BUFF_SIZE)) > 0))
+		while ((read(fd, buff, BUFF_SIZE)) > 0)
 		{
 			buff[BUFF_SIZE] = '\0';
 			if (new_buff[0] == '\0')
@@ -128,13 +122,10 @@ int			get_next_line(const int fd, char **line)
 		}
 		printf("new_buff: %s\n", new_buff);
 		push_file(&node, fd, new_buff);
-		// free(new_buff);
-		// new_buff = NULL;
 	}
 	tmp = fd_search(node, fd);
 	//printf("content before: %s\n\n", tmp->content);
 	*line = ft_getline(tmp->content);
-
 	tmp->content += n_in_begin(tmp->content);
 	tmp->content = (ft_strchr(tmp->content, '\n'));
 	//printf("content after: %s\n\n", tmp->content);	
@@ -143,6 +134,5 @@ int			get_next_line(const int fd, char **line)
 		printf("<<<LINE: %s>>>\n", *line);
 		return (1);
 	}
-
-	return 0;
+	return (0);
 }
