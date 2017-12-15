@@ -120,7 +120,7 @@ int			get_next_line(const int fd, char **line)
 			else
 				new_buff = ft_strjoin_free(new_buff, buff);
 		}
-		printf("new_buff: %s\n", new_buff);
+		//printf("new_buff: %s\n", new_buff);
 		push_file(&node, fd, new_buff);
 	}
 	tmp = fd_search(node, fd);
@@ -131,7 +131,7 @@ int			get_next_line(const int fd, char **line)
 	//printf("content after: %s\n\n", tmp->content);	
 	if (line && tmp->content)
 	{
-		printf("<<<LINE: %s>>>\n", *line);
+		//printf("<<<LINE: %s>>>\n", *line);
 		return (1);
 	}
 	return (0);
