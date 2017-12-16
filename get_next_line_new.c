@@ -12,6 +12,12 @@
 
 #include "get_next_line.h"
 
+#typedef struct s_seek
+{
+	int	fd;
+	size_t	position;
+} t_seek;
+
 t_list		*fd_search(t_list *head, int fd)
 {
 	while (head)
