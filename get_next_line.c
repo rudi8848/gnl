@@ -103,6 +103,7 @@ int			get_next_line(const int fd, char **line)
 	char				*new_buff;
 	static t_list		*node;
 	t_list				*tmp;
+	int					n = 0;
 
 	tmp = NULL;
 	if (fd < 0 || !line || (read(fd, 0, 0) < 0))
@@ -112,7 +113,7 @@ int			get_next_line(const int fd, char **line)
 		new_buff = ft_strnew(BUFF_SIZE);
 		if (!new_buff)
 			return (-1);
-		while ((read(fd, buff, BUFF_SIZE)) > 0)
+		while ((n = read(fd, buff, BUFF_SIZE)) > 0)
 		{
 			buff[BUFF_SIZE] = '\0';
 			if (new_buff[0] == '\0')
@@ -125,14 +126,22 @@ int			get_next_line(const int fd, char **line)
 	}
 	tmp = fd_search(node, fd);
 	//printf("content before: %s\n\n", tmp->content);
-	*line = ft_getline(tmp->content);
-	tmp->content += n_in_begin(tmp->content);
-	tmp->content = (ft_strchr(tmp->content, '\n'));
-	//printf("content after: %s\n\n", tmp->content);	
-	if (line && tmp->content)
+	if (!ft_strchr(tmp->content, '\n'))
 	{
-		//printf("<<<LINE: %s>>>\n", *line);
-		return (1);
+		*line = tmp->content;
+		return 0;
+	}
+	else
+	{
+		*line = ft_getline(tmp->content);
+		tmp->content += n_in_begin(tmp->content);
+		tmp->content = (ft_strchr(tmp->content, '\n'));
+	//printf("content after: %s\n\n", tmp->content);	
+		if (line && tmp->content)
+		{
+			//printf("<<<LINE: %s>>>\n", *line);
+			return (1);
+		}
 	}
 	return (0);
 }
