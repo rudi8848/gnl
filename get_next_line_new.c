@@ -14,9 +14,12 @@
 
 #typedef struct s_seek
 {
-	int	fd;
-	size_t	position;
+	size_t	fd;
+	size_t	position; //храним индекс последнего \н
 } t_seek;
+
+
+
 
 t_list		*fd_search(t_list *head, int fd)
 {
@@ -50,6 +53,7 @@ int			get_next_line(const int fd, char **line)
 			buff[BUFF_SIZE] = '\0';
 			if (new_buff[0] == '\0')
 				new_buff = ft_strncpy(new_buff, buff, BUFF_SIZE);
+			if ()
 			else
 				new_buff = ft_strjoin_free(new_buff, buff);
 		}
