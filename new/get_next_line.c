@@ -25,7 +25,7 @@ void		push_file(t_list **head, int fd/*, char *content*/)
 int	read_file(int const fd, void **data)
 {
 	//printf("in read\n");
-	/*static*/ char	buff[BUFF_SIZE+1] = { '\n' };
+	static char	buff[BUFF_SIZE+1] = { '\n' };
 	int			read_bytes;
 	char        *nstr = NULL;
 	read_bytes = read(fd, buff, BUFF_SIZE);
@@ -74,9 +74,8 @@ int get_next_line(int const fd, char ** line)
 	    bytes = read_file(fd, /*&data*/&tmp->content);
 	    if (bytes == 0)
 	    {
-	    	printf("bytes == 0\n");
 	       if ( (remainder = ft_strchr(/*data*/(char*)tmp->content, '\0')) == /*data*/(char*)tmp->content )
-	        	return (0);
+	        return (0);
 	    } else if (bytes < 0)
 	        return (-1);
 		else
