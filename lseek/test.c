@@ -3,12 +3,13 @@
 #include <fcntl.h>
 #include "libft.h"
 
-#define BUFF_SIZE 10
+#define BUFF_SIZE 12
 
 typedef struct s_seek
 {
   int fd;
   int pos;
+  char *endl;
   struct s_seek *next;
   } t_seek;
 
@@ -32,6 +33,7 @@ void printValues(t_seek *head, int last)
   {
     printf("==========now the list is==========\n");
     int i = 0;
+    if (head)
     printf("%d | %d --> ", head->fd, head->pos);
     while (i < last)
     {
@@ -62,7 +64,7 @@ void push_elem(t_seek **head, int fd, int pos)
 
   t_seek    *fd_search(t_seek *head, int fd)
 {
-  //printf("in fd_search\n");
+  printf("in fd_search\n");
   while (head)
   {
     if (fd == head->fd)
@@ -121,11 +123,13 @@ t_seek *change_pos(t_seek *head, int fd, int pos)
 
 int find_pos(char *s, int start, char c)
 {
-    //printf("in find_pos\n");
+    printf("in find_pos\n");
     int i = 0;
     int curr = 0;
     while (s[i])
     {
+      // while (s[i] == c)
+      //   i++;
       if (s[i] == c)
       {
         curr = start + i;
@@ -139,7 +143,7 @@ int find_pos(char *s, int start, char c)
 
 char *read_file(t_seek *file, int fd, char **line)
 {
-  //printf("in read_file\n");
+  printf("in read_file\n");
   char buff[BUFF_SIZE + 1];
   char *new_buff = "";
   int i;
@@ -149,16 +153,25 @@ char *read_file(t_seek *file, int fd, char **line)
   printf("start-pos: %d\n", file->pos);
   while ((n = read(fd, buff, BUFF_SIZE)) > 0)
     {
-     printf("in loop\n"); 
+     printf("in loop\n");
+     printf("read: %s\n", buff);
       buff[BUFF_SIZE] = '\0';
         if (ft_strlen(new_buff) > 0)
           new_buff = ft_strjoin_free(new_buff, buff);
         else
-        new_buff = ft_strjoin(new_buff, buff);
+          new_buff = ft_strjoin(new_buff, buff);
         i = find_pos(new_buff, start_pos, '\n');
         printf("read bytes: %d\n", n);
         if (i)
           break;
+        // else if (!find_pos(new_buff, start_pos, '\n'))
+        //   continue;
+        if (n < BUFF_SIZE)
+        {
+          // *line = ft_strrchr(new_buff, '\n');
+          printf("EOF!\n");
+          return NULL;
+        }
     }
     printf("i: %d\n", i);
     change_pos(file, fd, i);
@@ -172,7 +185,7 @@ char *read_file(t_seek *file, int fd, char **line)
 
 int   get_next_line(const int fd, char **line)
 {
-    //printf("in get_next_line\n");
+    // printf("in get_next_line\n");
     static t_seek *file = NULL;
     t_seek *tmp = NULL;
 
@@ -200,23 +213,24 @@ int main() {
 //t_seek *elem = NULL;
 char *line;
 int fd1 = open("test.txt", O_RDONLY);
-int fd2 = open("test1.txt", O_RDONLY);
-int fd3 = open("test2.txt", O_RDONLY);
+ int fd2 = open("test1.txt", O_RDONLY);
+// int fd3 = open("test2.txt", O_RDONLY);
 
 get_next_line(fd1,&line);
 printf(" call line: %s\n", line);
-get_next_line(fd2,&line);
-printf(" call line: %s\n", line);
-get_next_line(fd3,&line);
-printf(" call line: %s\n", line);
+ get_next_line(fd2,&line);
+ printf(" call line: %s\n", line);
+// get_next_line(fd3,&line);
+// printf(" call line: %s\n", line);
 //printValues(elem, elementsCount(elem));
 get_next_line(fd1,&line);
-get_next_line(fd2,&line);
-get_next_line(fd3,&line);
+get_next_line(fd1,&line);
+// get_next_line(fd2,&line);
+// get_next_line(fd3,&line);
 
 close(fd1);
-close(fd2);
-close(fd3);
+// close(fd2);
+// close(fd3);
 //system("leaks gnl");
 /*
 push_elem(&elem, 3,0);
