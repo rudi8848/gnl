@@ -10,34 +10,34 @@ int		main(void)
 	int fd3 = open("test2.txt", O_RDONLY);
 
 	get_next_line(fd1, &line);
-		printf("call file 1: %s\n", line);
+		printf("1 - call file 1: %s\n", line);
 
 	get_next_line(fd2, &line);
-		printf("call file 2:%s\n", line);
+		printf("2 - call file 2:%s\n", line);
 
 	get_next_line(fd1, &line);
-		printf("call file 1:%s\n", line);
+		printf("3 - call file 1:%s\n", line);
 
 	get_next_line(fd3, &line);
-		printf("call file 3: %s\n", line);
+		printf("4 - call file 3: %s\n", line);
 
 	get_next_line(fd2, &line);
-		printf("call file 2: %s\n", line);
+		printf("5 - call file 2: %s\n", line);
 
 	get_next_line(fd1, &line);
-		printf("call file 1: %s\n", line);
+		printf("6 - call file 1: %s\n", line);
 
 	get_next_line(fd2, &line);
-		printf("call file 2:%s\n", line);
+		printf("7 - call file 2:%s\n", line);
 
 	get_next_line(fd1, &line);
-		printf("call file 1:%s\n", line);
+		printf("8 - call file 1:%s\n", line);
 
 	get_next_line(fd3, &line);
-		printf("call file 3: %s\n", line);
+		printf("9 - call file 3: %s\n", line);
 
 	get_next_line(fd2, &line);
-		printf("call file 2: %s\n", line);
+		printf("10 - call file 2: %s\n", line);
 
 	close(fd1);
 	close(fd2);

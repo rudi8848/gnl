@@ -17,30 +17,31 @@ void		push_file(t_list **head, int fd/*, char *content*/)
 
 	tmp = (t_list*)malloc(sizeof(t_list));
 	tmp->next = (*head);
-	//tmp->content = content;
+	tmp->content = NULL;
 	tmp->content_size = (size_t)fd;
 	(*head) = tmp;
 }
 
 int	read_file(int const fd, void **data)
 {
-	//printf("in read\n");
-	static char	buff[BUFF_SIZE+1] = { '\n' };
+	// printf("in read\n");
+	// printf("fd: %d, tmp->content: %s\n", fd, *data);
+	/*static*/ char	buff[BUFF_SIZE+1] = { '\n' };
 	int			read_bytes;
 	char        *nstr = NULL;
 	read_bytes = read(fd, buff, BUFF_SIZE);
 	if (read_bytes > 0)
 	{
 	    buff[read_bytes] = '\0';
-	//    printf("buff: %s\n", buff);
+	   // printf("buff: %s\n", buff);
 	    nstr = ft_strjoin(*data, buff);
 	    if (!nstr)
 	        return (-1);
 	     free(*data);
 	    *data = nstr;
 	}
-	//printf("nstr: %s\n", nstr);
-	//printf("read bytes: %d\n", read_bytes);
+	// printf("nstr: %s\n", nstr);
+	// printf("read bytes: %d\n", read_bytes);
 	return (read_bytes);
 }
 
@@ -74,7 +75,7 @@ int get_next_line(int const fd, char ** line)
 	    bytes = read_file(fd, /*&data*/&tmp->content);
 	    if (bytes == 0)
 	    {
-	       if ( (remainder = ft_strchr(/*data*/(char*)tmp->content, '\0')) == /*data*/(char*)tmp->content )
+	       if ((remainder = ft_strchr(/*data*/(char*)tmp->content, '\0')) == /*data*/(char*)tmp->content )
 	        return (0);
 	    } else if (bytes < 0)
 	        return (-1);
