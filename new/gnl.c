@@ -49,6 +49,18 @@ int			read_file(int const fd, void **data)
 	return (read_bytes);
 }
 
+int 		func(void **tmp_content, char **remainder, char *line)
+{
+	free(line);
+	line = ft_strsub(*tmp_content, 0, *remainder - (char*)tmp_content);
+	if (!line)
+		return (-1);
+	*remainder = ft_strdup(*remainder + 1);
+	free(*tmp_content);
+	*tmp_content = *remainder;
+	return (1);
+}
+
 int			get_next_line(int const fd, char **line)
 {
 	static t_list	*file;
@@ -76,11 +88,13 @@ int			get_next_line(int const fd, char **line)
 		else
 			remainder = ft_strchr(tmp->content, '\n');
 	}
+	return (func(&tmp->content, &remainder, *line) == 1 ? 1 : -1);
+/*
 	free(*line);
 	if (!(*line = ft_strsub(tmp->content, 0, remainder - (char*)tmp->content)))
 		return (-1);
 	remainder = ft_strdup(remainder + 1);
 	free(tmp->content);
 	tmp->content = remainder;
-	return (1);
+	return (1);*/
 }
