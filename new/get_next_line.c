@@ -12,7 +12,7 @@
 
 #include "get_next_line.h"
 
-t_list		*fd_search(t_list **head, int fd)
+static t_list		*fd_search(t_list **head, int fd)
 {
 	t_list			*tmp;
 
@@ -29,7 +29,7 @@ t_list		*fd_search(t_list **head, int fd)
 	return (tmp);
 }
 
-int			read_file(int const fd, void **data)
+static int			read_file(int const fd, void **data)
 {
 	char			buff[BUFF_SIZE + 1];
 	int				read_bytes;
@@ -49,33 +49,44 @@ int			read_file(int const fd, void **data)
 	return (read_bytes);
 }
 
-int			get_next_line(int const fd, char **line)
+static int			cut_content(t_list **file, char **buff)
+{
+	int				bytes;
+
+	bytes = 0;
+	*buff = ft_strchr((*file)->content, '\n');
+	while (*buff == NULL)
+	{
+		bytes = read_file((*file)->content_size, &(*file)->content);
+		if (bytes == 0)
+		{
+			if ((*buff = ft_strchr((char*)(*file)->content, '\0'))
+					== (char*)(*file)->content)
+				return (0);
+		}
+		else if (bytes < 0)
+			return (-1);
+		else
+			*buff = ft_strchr((*file)->content, '\n');
+	}
+	return (1);
+}
+
+int					get_next_line(int const fd, char **line)
 {
 	static t_list	*file;
 	t_list			*tmp;
 	char			*remainder;
-	int				bytes;
+	int				ret;
 
 	if ((!line || !(*line = ft_strnew(1))) || fd < 0 || (read(fd, 0, 0)) < 0)
 		return (-1);
 	tmp = fd_search(&file, fd);
 	if ((!tmp->content && !((tmp->content = ft_memalloc(sizeof(char))))))
 		return (-1);
-	remainder = ft_strchr((char*)tmp->content, '\n');
-	while (remainder == NULL)
-	{
-		bytes = read_file(fd, &tmp->content);
-		if (bytes == 0)
-		{
-			if ((remainder = ft_strchr((char*)tmp->content, '\0'))
-					== (char*)tmp->content)
-				return (0);
-		}
-		else if (bytes < 0)
-			return (-1);
-		else
-			remainder = ft_strchr(tmp->content, '\n');
-	}
+	ret = cut_content(&tmp, &remainder);
+	if (ret != 1)
+		return (ret);
 	free(*line);
 	if (!(*line = ft_strsub(tmp->content, 0, remainder - (char*)tmp->content)))
 		return (-1);
