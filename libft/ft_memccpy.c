@@ -1,25 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_memccpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gvynogra <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/12/01 09:39:03 by gvynogra          #+#    #+#             */
-/*   Updated: 2017/12/01 17:35:50 by gvynogra         ###   ########.fr       */
+/*   Created: 2017/11/06 13:27:43 by gvynogra          #+#    #+#             */
+/*   Updated: 2017/11/06 13:28:27 by gvynogra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "includes/libft.h"
 
-# include "libft/includes/libft.h"
-# include <stdlib.h>
-# include <stdio.h>
-# include <unistd.h>
+void	*ft_memccpy(void *dst, const void *src, int c, size_t n)
+{
+	unsigned char		*ptr_d;
+	unsigned char		*ptr_s;
+	size_t				i;
+	unsigned char		stop;
 
-# define BUFF_SIZE 22
-
-int		get_next_line(const int fd, char **line);
-
-#endif
+	i = 0;
+	ptr_d = (unsigned char*)dst;
+	ptr_s = (unsigned char*)src;
+	stop = (unsigned char)c;
+	while (i < n)
+	{
+		ptr_d[i] = ptr_s[i];
+		if (ptr_s[i] == stop)
+			return (ptr_d + i + 1);
+		i++;
+	}
+	return (NULL);
+}

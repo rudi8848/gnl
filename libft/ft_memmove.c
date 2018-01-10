@@ -1,25 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gvynogra <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/12/01 09:39:03 by gvynogra          #+#    #+#             */
-/*   Updated: 2017/12/01 17:35:50 by gvynogra         ###   ########.fr       */
+/*   Created: 2017/11/06 13:30:35 by gvynogra          #+#    #+#             */
+/*   Updated: 2017/11/06 13:32:03 by gvynogra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "includes/libft.h"
 
-# include "libft/includes/libft.h"
-# include <stdlib.h>
-# include <stdio.h>
-# include <unistd.h>
+void	*ft_memmove(void *dst, const void *src, size_t n)
+{
+	unsigned char	*ptr_d;
+	unsigned char	*ptr_s;
 
-# define BUFF_SIZE 22
-
-int		get_next_line(const int fd, char **line);
-
-#endif
+	ptr_d = (unsigned char*)dst;
+	ptr_s = (unsigned char*)src;
+	if (ptr_s < ptr_d)
+	{
+		while (n--)
+			ptr_d[n] = ptr_s[n];
+	}
+	else
+		ft_memcpy(ptr_d, ptr_s, n);
+	return (ptr_d);
+}

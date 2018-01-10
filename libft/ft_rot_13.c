@@ -1,25 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_rot_13.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gvynogra <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/12/01 09:39:03 by gvynogra          #+#    #+#             */
-/*   Updated: 2017/12/01 17:35:50 by gvynogra         ###   ########.fr       */
+/*   Created: 2017/11/15 09:34:56 by gvynogra          #+#    #+#             */
+/*   Updated: 2017/11/15 09:40:46 by gvynogra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "includes/libft.h"
 
-# include "libft/includes/libft.h"
-# include <stdlib.h>
-# include <stdio.h>
-# include <unistd.h>
+void	ft_rot_13(char *s)
+{
+	int i;
 
-# define BUFF_SIZE 22
-
-int		get_next_line(const int fd, char **line);
-
-#endif
+	i = 0;
+	if (s)
+	{
+		while (s[i])
+		{
+			if (s[i] >= 'a' && s[i] <= 'z')
+				s[i] = ((s[i] - 'a') + 13) % 26 + 'a';
+			else if ((s[i] >= 'A' && s[i] <= 'Z'))
+				s[i] = ((s[i] - 'A') + 13) % 26 + 'A';
+			i++;
+		}
+	}
+}

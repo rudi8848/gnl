@@ -5,143 +5,93 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: gvynogra <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/12/01 09:38:42 by gvynogra          #+#    #+#             */
-/*   Updated: 2017/12/03 13:09:01 by gvynogra         ###   ########.fr       */
+/*   Created: 2017/12/25 12:50:56 by gvynogra          #+#    #+#             */
+/*   Updated: 2017/12/25 13:02:20 by gvynogra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-t_list		*fd_search(t_list *head, int fd)
+static t_list		*fd_search(t_list **head, int fd)
 {
-	while (head)
+	t_list			*tmp;
+
+	tmp = *head;
+	while (tmp)
 	{
-		if ((size_t)fd == head->content_size)
-			return (head);
-		head = head->next;
+		if ((size_t)fd == tmp->content_size)
+			return (tmp);
+		tmp = tmp->next;
 	}
-	return (NULL);
+	tmp = ft_lstnew("", fd);
+	ft_lstadd(head, tmp);
+	tmp = (*head);
+	return (tmp);
 }
 
-char			*ft_strjoin_free(char *s1, char *s2)
+static int			read_file(int const fd, void **data)
 {
-	char		*dest;
-	size_t		len;
-	size_t		i;
-	size_t		j;
+	char			buff[BUFF_SIZE + 1];
+	int				read_bytes;
+	char			*new_buff;
 
-	i = 0;
-	j = 0;
-	if (s1 && s2)
+	new_buff = NULL;
+	read_bytes = read(fd, buff, BUFF_SIZE);
+	if (read_bytes > 0)
 	{
-		len = ft_strlen(s1) + ft_strlen(s2);
-		dest = (char*)malloc(sizeof(char) * (len + 1));
-		if (dest)
-		{
-			ft_bzero(dest, len+1);
-			while (s1[i])
-			{
-				dest[i] = s1[i];
-				i++;
-			}
-			while (s2[j])
-				dest[i++] = s2[j++];
-			dest[i++] = '\0';
-			free(s1);
-				return (dest);
-		}
-	}
-	return (NULL);
-}
-
-void		push_file(t_list **head, int fd, char *content)
-{
-	t_list *tmp;
-
-	tmp = (t_list*)malloc(sizeof(t_list));
-	tmp->next = (*head);
-	tmp->content = content;
-	tmp->content_size = (size_t)fd;
-	(*head) = tmp;
-}
-
-char		*ft_getline(char *s)
-{
-	size_t i;
-	size_t j;
-
-	j = 0;
-	i = 0;
-	if (s)
-	{
-		while (s[i] && s[i] == '\n')
-		{
-			i++;
-			j++;
-		}
-		while (s[i] && s[i] != '\n')
-			i++;
-		s = ft_strsub(s, j, i - j);
-		return (s);
-	}
-	return (NULL);
-}
-
-int			n_in_begin(char *s)
-{
-	size_t i;
-
-	i = 0;
-	while (s[i] == '\n')
-		i++;
-	return (i);
-}
-
-int			get_next_line(const int fd, char **line)
-{
-	char				buff[BUFF_SIZE + 1];
-	char				*new_buff;
-	static t_list		*node;
-	t_list				*tmp;
-	int					n = 0;
-
-	tmp = NULL;
-	if (fd < 0 || !line || (read(fd, 0, 0) < 0))
-		return (-1);
-	if (!fd_search(node, fd))
-	{
-		new_buff = ft_strnew(BUFF_SIZE);
+		buff[read_bytes] = '\0';
+		new_buff = ft_strjoin(*data, buff);
 		if (!new_buff)
 			return (-1);
-		while ((n = read(fd, buff, BUFF_SIZE)) > 0)
-		{
-			buff[BUFF_SIZE] = '\0';
-			if (new_buff[0] == '\0')
-				new_buff = ft_strncpy(new_buff, buff, BUFF_SIZE);
-			else
-				new_buff = ft_strjoin_free(new_buff, buff);
-		}
-		//printf("new_buff: %s\n", new_buff);
-		push_file(&node, fd, new_buff);
+		free(*data);
+		*data = new_buff;
 	}
-	tmp = fd_search(node, fd);
-	//printf("content before: %s\n\n", tmp->content);
-	if (!ft_strchr(tmp->content, '\n'))
+	return (read_bytes);
+}
+
+static int			cut_content(t_list **file, char **buff)
+{
+	int				bytes;
+
+	bytes = 0;
+	*buff = ft_strchr((*file)->content, '\n');
+	while (*buff == NULL)
 	{
-		*line = tmp->content;
-		return 0;
-	}
-	else
-	{
-		*line = ft_getline(tmp->content);
-		tmp->content += n_in_begin(tmp->content);
-		tmp->content = (ft_strchr(tmp->content, '\n'));
-	//printf("content after: %s\n\n", tmp->content);	
-		if (line && tmp->content)
+		bytes = read_file((*file)->content_size, &(*file)->content);
+		if (bytes == 0)
 		{
-			//printf("<<<LINE: %s>>>\n", *line);
-			return (1);
+			if ((*buff = ft_strchr((char*)(*file)->content, '\0'))
+					== (char*)(*file)->content)
+				return (0);
 		}
+		else if (bytes < 0)
+			return (-1);
+		else
+			*buff = ft_strchr((*file)->content, '\n');
 	}
-	return (0);
+	return (1);
+}
+
+int					get_next_line(int const fd, char **line)
+{
+	static t_list	*file;
+	t_list			*tmp;
+	char			*remainder;
+	int				ret;
+
+	if ((!line || !(*line = ft_strnew(1))) || fd < 0 || (read(fd, 0, 0)) < 0)
+		return (-1);
+	tmp = fd_search(&file, fd);
+	if ((!tmp->content && !((tmp->content = ft_memalloc(sizeof(char))))))
+		return (-1);
+	ret = cut_content(&tmp, &remainder);
+	if (ret != 1)
+		return (ret);
+	free(*line);
+	if (!(*line = ft_strsub(tmp->content, 0, remainder - (char*)tmp->content)))
+		return (-1);
+	remainder = ft_strdup(remainder + 1);
+	free(tmp->content);
+	tmp->content = remainder;
+	return (1);
 }
